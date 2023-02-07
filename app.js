@@ -4,15 +4,15 @@ const express = require('express');
 
 //  mongoose
 const mongoose = require('mongoose');
-const app = express();
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 const path = require('path');
-
-
+const cors = require('cors');
+const app = express();
+app.use(cors());
 mongoose
   .connect(
-    process.env.MONGOOSE_SECRET_KEY,
+    /*process.env.MONGOOSE_SECRET_KEY*/'mongodb+srv://jeremy:alice1310@cluster0.cnyqwzx.mongodb.net/openSauce?retryWrites=true&w=majority',
     {
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -24,6 +24,7 @@ mongoose
 app.use(express.json());
 
 
+
 //middleware (ne pas oublier "next pour passser au middleware suivant)//
 
 //middleware pour resoudre les erreurs CORS(permettre de communiquer entre le serveur 3000 et 4200)
@@ -33,6 +34,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
+
 
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);
