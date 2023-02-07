@@ -118,7 +118,7 @@ exports.sauceLike = (req, res, next) => {
 								$push: { usersLiked: req.body.userId },
 							}
 						)
-							.then(() => {res.status(201).json({ message: 'your like this sauce' });
+							.then(() => {res.status(201).json({ message: "wouha j'aime cette sauce" });
 							})
 							.catch((error) => res.status(400).json({ error }));
 					}
@@ -134,7 +134,7 @@ exports.sauceLike = (req, res, next) => {
 								$push: { usersDisliked: req.body.userId },
 							}
 						)
-							.then(() => {res.status(201).json({ message: "you don't like this sauce" });
+							.then(() => {res.status(201).json({ message: "ah non, je ne l'aime pas" });
 							})
 							.catch((error) => res.status(400).json({ error }));
 					}
@@ -151,7 +151,7 @@ exports.sauceLike = (req, res, next) => {
 								
 							}
 						)
-							.then(() => {res.status(201).json({ message: 'you have removed your like vote' });
+							.then(() => {res.status(201).json({ message: "alors !!!!! on change d'avis???" });
 							})
 							.catch((error) => res.status(400).json({ error }));
 					} else if (sauce.usersDisliked.includes(req.body.userId)) {
@@ -163,13 +163,13 @@ exports.sauceLike = (req, res, next) => {
 								$pull: { usersDisliked: req.body.userId },
 							}
 						)
-							.then(() => {res.status(201).json({ message: 'you have removed your dislike vote' });
+							.then(() => {res.status(201).json({ message: 'finalement mmmmhhhh non' });
 							})
 							.catch((error) => res.status(400).json({ error }))
 					}
 					break;
 				default:
-					res.status(401).json({ message: 'this is an Unauthorized vote' });
+					res.status(401).json({ message: 'nan nan nan tu ne peu pas voter' });
 			}
 		});
 }
