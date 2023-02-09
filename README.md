@@ -6,7 +6,8 @@ Pour activer le serveur backend, utiliser nodemon run start.
 
 Pour activer le serveur frontend, utiliser npm run start.
 
-Le fichier .env et images non present sur le repository github.
+Le fichier .env et images non present sur le repository github
+
 TOKEN_SECRET=
 MONGOOSE_SECRET_KEY=
 SALT_ROUND=
