@@ -1,3 +1,9 @@
+const SUCCES = 200
+const CREATED = 201
+const BAD_REQUEST = 400
+const UNAUTHORIZED = 401
+const SERVER_ERROR = 500
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -12,7 +18,7 @@ exports.signup = (req, res, next) => {
     const password = req.body.password;
     const SALT_ROUND = process.env.SALT_ROUND
     if (!email || !password ) {
-        return res.status(400).json({ message: 'Champ(s) manquant(s) pour inscription' });  
+        return res.status(BAD_REQUEST).json({ message: 'Champ(s) manquant(s) pour inscription' });  
     }
     
     bcrypt.hash(password, SALT_ROUND)
@@ -22,25 +28,25 @@ exports.signup = (req, res, next) => {
           password: hash
         });
         user.save()
-          .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-          .catch(error => res.status(400).json({ error }));
+          .then(() => res.status(CREATED).json({ message: 'Utilisateur créé !' }))
+          .catch(error => res.status(BAD_REQUEST).json({ error }));
       })
-      .catch(error => res.status(500).json({ error }));
+      .catch(error => res.status(SERVER_ERROR).json({ error }));
 };
 // verification des donnees de l'utilisateur afin de le connecter 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user) {
-                return res.status(401).json({ message: 'login ou mot de passe incorrecte 1'});
+                return res.status(UNAUTHORIZED).json({ message: 'login ou mot de passe incorrecte 1'});
             }
             // fonction compare de brypt afin de comparer le mdp fournie pas l'uilisateur et le mdp hash
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
-                        return res.status(401).json({ message: 'login ou mot de passe incorrecte 2' });
+                        return res.status(UNAUTHORIZED).json({ message: 'login ou mot de passe incorrecte 2' });
                     }
-                    res.status(200).json({
+                    res.status(SUCCES).json({
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
@@ -49,7 +55,7 @@ exports.login = (req, res, next) => {
                         )
                     });
                 })
-                .catch(error => res.status(500).json({ error }));
+                .catch(error => res.status(SERVER_ERROR).json({ error }));
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(SERVER_ERROR).json({ error }));
  };

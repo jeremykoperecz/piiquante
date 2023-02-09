@@ -1,7 +1,13 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
 
+const SUCCES = 200
+const CREATED = 201
 const BAD_REQUEST = 400
+const UNAUTHORIZED = 401
+const NOT_FOUND = 404
+const SERVER_ERROR = 500
+
 // permet a l'utilisateur de cree une sauce
 exports.createSauce = /*async */(req, res, next) => {
   try {
@@ -19,7 +25,7 @@ exports.createSauce = /*async */(req, res, next) => {
 
     });
     const sauceSaved = /*await */sauce.save()
-    return res.status(201).json({ message: 'Sauce enregistrée !', sauceSaved})  
+    return res.status(CREATED).json({ message: 'Sauce enregistrée !', sauceSaved})  
   } catch (error) {
     console.error(error);
     // delete image if any error occurs
@@ -36,11 +42,11 @@ exports.getOneSauce = (req, res, next) => {
     _id: req.params.id
   }).then(
     (sauce) => {
-      res.status(200).json(sauce);
+      res.status(SUCCES).json(sauce);
     }
   ).catch(
     (error) => {
-      res.status(404).json({
+      res.status(NOT_FOUND).json({
         error: error
       });
     }
@@ -57,11 +63,11 @@ exports.modifySauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
             if (sauce.userId != req.auth.userId) {
-                res.status(401).json({ message : 'Not authorized'});
+                res.status(UNAUTHORIZED).json({ message : 'Not authorized'});
             } else {
                 Sauce.updateOne({ _id: req.params.id}, { ...deleteSauce, _id: req.params.id})
-                .then(() => res.status(200).json({message : 'Sauce modifiée !'}))
-                .catch(error => res.status(401).json({ error }));
+                .then(() => res.status(SUCCES).json({message : 'Sauce modifiée !'}))
+                .catch(error => res.status(UNAUTHORIZED).json({ error }));
             }
         })
         .catch((error) => {
@@ -73,25 +79,25 @@ exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id})
         .then(thing => {
             if (thing.userId != req.auth.userId) {
-                res.status(401).json({message: 'Not authorized'});
+                res.status(UNAUTHORIZED).json({message: 'Not authorized'});
             } else {
                 const filename = thing.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, () => {
                     Sauce.deleteOne({_id: req.params.id})
-                        .then(() => { res.status(200).json({message: 'Sauce supprimée !'})})
-                        .catch(error => res.status(401).json({ error }));
+                        .then(() => { res.status(SUCCES).json({message: 'Sauce supprimée !'})})
+                        .catch(error => res.status(UNAUTHORIZED).json({ error }));
                 });
             }
         })
         .catch( error => {
-            res.status(500).json({ error });
+            res.status(SERVER_ERROR).json({ error });
         });
  };
 //permet a l'utilisateur de trouver toutes les sauces
 exports.getAllSauces = (req, res, next) => {
   Sauce.find().then(
     (sauces) => {
-      res.status(200).json(sauces);
+      res.status(SUCCES).json(sauces);
     }
   ).catch(
     (error) => {
@@ -149,15 +155,15 @@ exports.likeSauce = (req, res, then) => {
       })
         .then(() => {
           // retourne un message confirmant la mise à jour
-          res.status(200).json({ message: "alors!!!! on change d'avis??!" });
+          res.status(SUCCES).json({ message: "alors!!!! on change d'avis??!" });
         })
         .catch(error => {
           // message d'erreur si la sauce n'a pu être mise à jour
-          res.status(400).json({ error });
+          res.status(BAD_REQUEST).json({ error });
         });
     })
     // message d'erreur si la sauce n'a pu être recherché
     .catch(error => {
-      res.status(404).json({ error });
+      res.status(NOT_FOUND).json({ error });
     });
 }
