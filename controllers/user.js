@@ -16,12 +16,12 @@ dotenv.config();
 exports.signup = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
-    const SALT_ROUND = process.env.SALT_ROUND
+    //const SALT_ROUND = process.env.SALT_ROUND
     if (!email || !password ) {
         return res.status(BAD_REQUEST).json({ message: 'Champ(s) manquant(s) pour inscription' });  
     }
     
-    bcrypt.hash(password, SALT_ROUND)
+    bcrypt.hash(password, 10 /*SALT_ROUND*/)
       .then(hash => {
         const user = new User({
           email: email,
