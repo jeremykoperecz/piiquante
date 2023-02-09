@@ -1,3 +1,5 @@
 node_modules
 .env
 images
+password-validator
+email-validator

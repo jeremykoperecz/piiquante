@@ -154,15 +154,12 @@ exports.likeSauce = (req, res, then) => {
         _id: req.params.id
       })
         .then(() => {
-          // retourne un message confirmant la mise à jour
           res.status(SUCCES).json({ message: "alors!!!! on change d'avis??!" });
         })
         .catch(error => {
-          // message d'erreur si la sauce n'a pu être mise à jour
           res.status(BAD_REQUEST).json({ error });
         });
     })
-    // message d'erreur si la sauce n'a pu être recherché
     .catch(error => {
       res.status(NOT_FOUND).json({ error });
     });

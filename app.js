@@ -6,6 +6,7 @@ const userRoutes = require('./routes/user');
 const path = require('path');
 const cors = require('cors');
 const app = express();
+const helmet = require('helmet');
 
 dotenv.config();
 
@@ -21,7 +22,11 @@ mongoose
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:4200",}));
+app.use(cors());
+app.use(helmet.xssFilter());
+
+
+
   
 
 //middleware pour resoudre les erreurs CORS(permettre de communiquer entre le serveur 3000 et 4200)
