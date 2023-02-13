@@ -9,7 +9,7 @@ const NOT_FOUND = 404
 const SERVER_ERROR = 500
 
 // permet a l'utilisateur de cree une sauce
-exports.createSauce = /*async */(req, res, next) => {
+exports.createSauce = async (req, res, next) => {
   try {
     const addSauce = JSON.parse(req.body.sauce);
     delete addSauce._id;
@@ -24,7 +24,7 @@ exports.createSauce = /*async */(req, res, next) => {
       usersDisliked: ['']
 
     });
-    const sauceSaved = /*await */sauce.save()
+    const sauceSaved = await sauce.save()
     return res.status(CREATED).json({ message: 'Sauce enregistrée !', sauceSaved})  
   } catch (error) {
     console.error(error);
@@ -55,7 +55,7 @@ exports.getOneSauce = (req, res, next) => {
 //permet a l'utilsateur de modifier sa sauce
 exports.modifySauce = (req, res, next) => {
     const deleteSauce = req.file ? {
-        ...JSON.parse(req.body.thing),
+        ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
   
@@ -77,11 +77,11 @@ exports.modifySauce = (req, res, next) => {
 //permet a l'utilisateur de supprimer sa sauce
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id})
-        .then(thing => {
-            if (thing.userId != req.auth.userId) {
+        .then(sauce => {
+            if (sauce.userId != req.auth.userId) {
                 res.status(UNAUTHORIZED).json({message: 'Not authorized'});
             } else {
-                const filename = thing.imageUrl.split('/images/')[1];
+                const filename = sauce.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, () => {
                     Sauce.deleteOne({_id: req.params.id})
                         .then(() => { res.status(SUCCES).json({message: 'Sauce supprimée !'})})
