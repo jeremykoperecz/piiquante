@@ -1,7 +1,7 @@
 # PROJET PIIQUANTE:
 
 ## Contexte
-
+Le projet Piiquante, est un projet de formation openclassrooms sur le developpement d'un backend securisé.
 
 
 ## Mise en route
