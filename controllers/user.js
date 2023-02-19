@@ -1,4 +1,4 @@
-const SUCCES = 200
+const SUCCESS = 200
 const CREATED = 201
 const BAD_REQUEST = 400
 const UNAUTHORIZED = 401
@@ -16,12 +16,12 @@ dotenv.config();
 exports.signup = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
-    //const SALT_ROUND = process.env.SALT_ROUND
+    
     if (!email || !password ) {
         return res.status(BAD_REQUEST).json({ message: 'Champ(s) manquant(s) pour inscription' });  
     }
     
-    bcrypt.hash(password, 10 /*SALT_ROUND*/)
+    bcrypt.hash(password,10)
       .then(hash => {
         const user = new User({
           email: email,
@@ -46,7 +46,7 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(UNAUTHORIZED).json({ message: 'login ou mot de passe incorrecte 2' });
                     }
-                    res.status(SUCCES).json({
+                    res.status(SUCCESS).json({
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
