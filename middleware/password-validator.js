@@ -15,6 +15,6 @@ module.exports = (req, res, next) => {
 	if (passwordSchema.validate(req.body.password)) {
 		next();
 	} else {
-        res.status(BAD_REQUEST).json({ message: 'le mot de passe doit contenir minimum 6 caracteres, maximum 15, une majuscule et un chiffre:' + passwordSchema.validate('req.body.password', { list: true }) });
+        res.status(BAD_REQUEST).json({ message: 'le mot de passe doit contenir minimum 8 caracteres, maximum 15, une majuscule et un chiffre:' + passwordSchema.validate('req.body.password', { list: true }) });
 	}
 };
